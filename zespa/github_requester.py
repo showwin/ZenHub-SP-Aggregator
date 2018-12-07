@@ -20,7 +20,7 @@ class GitHubRequester():
         issues = []
         while True:
             issues += self._fetch_issues(start_date, end_date, page)
-            if len(issues) % PER_PAGE != 0:
+            if issues == [] or len(issues) % PER_PAGE != 0:
                 break
             page += 1
         return issues
@@ -30,11 +30,12 @@ class GitHubRequester():
                             f'&q=is:issue+is:closed+closed:{start_date}..{end_date}+repo:{self.repo_name}')
         issues = json.loads(resp.content.decode('utf-8'))
         try:
-            return issues['items']
+            return issues['items'] or []
         except KeyError:
             if 'errors' in issues:
                 for error in issues['errors']:
                     print(error['message'])
+            return []
 
     def get_repo_id(self):
         resp = requests.get(f'{GITHUB_REPO_API}/{self.repo_name}?access_token={self.token}')

@@ -39,11 +39,11 @@ class ZespaConfiguration():
             return ''
         return config['github_token']
 
-    def get_repo_name(self):
+    def get_repo_names(self):
         config = self._get_config()
-        if 'repo_name' not in config:
+        if 'repo_names' not in config:
             return ''
-        return config['repo_name']
+        return config['repo_names']
 
     def get_zenhub_token(self):
         config = self._get_config()
@@ -61,12 +61,14 @@ class ZespaConfiguration():
         github_token = getpass.getpass(prompt='GitHub Token:')
         zenhub_token = getpass.getpass(prompt='ZenHub Token:')
 
-        repo_name = input('Repository Name (e.g.: octokit/go-octokit):')
+        repo_names = input('Repository Names (e.g.: octokit/go-octokit, octokit/fixtures):')
+        repo_names = repo_names.split(',')
+        repo_names = [name.strip() for name in repo_names]
 
         config_dict = {
             'github_token': github_token,
             'zenhub_token': zenhub_token,
-            'repo_name': repo_name,
+            'repo_names': repo_names,
         }
         self._set_config(config_dict)
         print("Saved to '{}'".format(CONFIG_PATH))

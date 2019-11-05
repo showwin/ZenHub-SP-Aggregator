@@ -1,4 +1,5 @@
 import json
+import time
 
 import requests
 
@@ -11,6 +12,7 @@ class ZenHubRequester():
         self.token = token
 
     def get_estimate(self, issue_id):
+        time.sleep(0.1)
         resp = requests.get(f'{ZENHUB_API}/p1/repositories/{self.repo_id}/issues/{issue_id}?access_token={self.token}')
         issue_info = json.loads(resp.content.decode('utf-8'))
         estimate = issue_info.get('estimate', {}).get('value', 0)

@@ -26,8 +26,10 @@ class GitHubRequester():
         return issues
 
     def _fetch_issues(self, start_date, end_date, page=1):
-        resp = requests.get(f'{GITHUB_SEARCH_API}?access_token={self.token}&per_page={PER_PAGE}&page={page}' +
-                            f'&q=is:issue+is:closed+closed:{start_date}..{end_date}+repo:{self.repo_name}')
+        headers = { 'Authorization': f'token {self.token}' }
+        url = f'{GITHUB_SEARCH_API}?per_page={PER_PAGE}&page={page}' \
+              f'&q=is:issue+is:closed+closed:{start_date}..{end_date}+repo:{self.repo_name}'
+        resp = requests.get(url=url, headers=headers)
         issues = json.loads(resp.content.decode('utf-8'))
         try:
             return issues['items'] or []

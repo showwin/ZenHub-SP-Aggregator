@@ -19,8 +19,9 @@ class GitHubRequester():
         page = 1
         issues = []
         while True:
-            issues += self._fetch_issues(start_date, end_date, page)
-            if issues == [] or len(issues) % PER_PAGE != 0:
+            fetched_issues = self._fetch_issues(start_date, end_date, page)
+            issues += fetched_issues
+            if fetched_issues == [] or len(issues) % PER_PAGE != 0:
                 break
             page += 1
         return issues
